@@ -22,6 +22,7 @@ export default createStore({
          */
         setTarea(state, payload){
             state.tareas.push(payload);
+            localStorage.setItem('tareas', JSON.stringify(state.tareas));
         },
 
         /**
@@ -31,6 +32,7 @@ export default createStore({
          */
         deleteTarea(state, payload){
             state.tareas = state.tareas.filter(tarea => tarea.id !== payload);
+            localStorage.setItem('tareas', JSON.stringify(state.tareas));
         },
 
         /**
@@ -41,6 +43,16 @@ export default createStore({
         editTarea(state, payload){
             // console.log("🚀 ~ file: index.js ~ line 42 ~ editTarea ~ payload", payload);
             state.tareas = state.tareas.map(tarea => tarea.id === payload.id ? payload : tarea);
+            localStorage.setItem('tareas', JSON.stringify(state.tareas));
+        },
+
+        /**
+         * Function in charge of retrieving tasks from local storage.
+         * @param {object} state - Object contains all your application level state and serves as the "single source of truth.".
+         * @param {array.<tarea>} payload - Tasks obtained form local storage.
+         */
+        getTareasLocalStorage(state, payload){
+            state.tareas = payload;
         }
     },
     /**Actions are called from the components in vue (views)*/
@@ -67,6 +79,19 @@ export default createStore({
          */
         editTarea({ commit }, tarea){
             commit('editTarea', tarea);
+        },
+
+        /**
+         * Function in charge of loading tasks from local storage in case there are existing ones.
+         */
+        getTareasLocalStorage({ commit }){
+            if(localStorage.getItem('tareas')){
+                let tareas = JSON.parse(localStorage.getItem('tareas'));
+                commit('getTareasLocalStorage', tareas);
+                return;
+            }
+
+            localStorage.setItem('tareas', JSON.stringify([]) );
         }
     },
     modules: {
