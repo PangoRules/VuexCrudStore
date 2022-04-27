@@ -30,8 +30,17 @@ export default createStore({
          * @param {string} payload - Id of the task to erase from the array
          */
         deleteTarea(state, payload){
-            // state.tareas = state.tareas.filter(tarea => tarea.id !== payload);
-            console.log("🚀 ~ file: index.js ~ line 34 ~ deleteTarea ~ state.tareas.filter(tarea => tarea.id !== payload);", state.tareas.filter(tarea => tarea.id !== payload));
+            state.tareas = state.tareas.filter(tarea => tarea.id !== payload);
+        },
+
+        /**
+         * Function in charge of editing a task from the array.
+         * @param {object} state - Object contains all your application level state and serves as the "single source of truth.".
+         * @param {object.<tarea>} payload - Task to edit and its new data.
+         */
+        editTarea(state, payload){
+            // console.log("🚀 ~ file: index.js ~ line 42 ~ editTarea ~ payload", payload);
+            state.tareas = state.tareas.map(tarea => tarea.id === payload.id ? payload : tarea);
         }
     },
     /**Actions are called from the components in vue (views)*/
@@ -50,6 +59,14 @@ export default createStore({
          */
         deleteTarea({ commit }, id){
             commit('deleteTarea', id);
+        },
+        
+        /**
+         * Función encargada de editar una tarea especifica del array.
+         * @param {object.<tarea>} tarea - Datos editados de la tarea seleccionada.
+         */
+        editTarea({ commit }, tarea){
+            commit('editTarea', tarea);
         }
     },
     modules: {

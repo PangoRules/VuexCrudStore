@@ -21,7 +21,10 @@
                 <td>{{tarea.categorias.join(', ')}}</td>
                 <td>{{tarea.estado}}</td>
                 <td>{{tarea.numero}}</td>
-                <td></td>
+                <td>
+                    <button type="button" class="btn btn-outline-warning text-dark mr-2" @click="setEditTask(tarea)">Editar</button>
+                    <button type="button" class="btn btn-danger" @click="removeTask(tarea.id)">Eliminar</button>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -44,6 +47,11 @@ export default {
          */
         removeTask(id){
             this.deleteTarea(id);
+        },
+
+        /**Evento emitido al componente padre para editar una tarea actual */
+        setEditTask(task){
+            this.$emit('setEditTask', task);
         }
     }
 }

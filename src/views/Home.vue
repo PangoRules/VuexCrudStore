@@ -1,11 +1,11 @@
 <template>
     <h1 class="my-5">Formularios con Vue.js</h1>
     <form @submit.prevent="procesarFormulario">
-        <input-component :tarea="tarea" />
+        <input-component :tarea="tarea" :isedit="isEdit" @cancelEdit="cleanData" @process="procesarFormulario"/>
     </form>
     <hr>
     <p>
-        <lista-tareas-component />
+        <lista-tareas-component @setEditTask="setEditTask"/>
     </p>
 </template>
 
@@ -24,35 +24,47 @@ export default {
 
     data() {
         return {
-            /**@type {Object} - Objeto con los datos de la nueva tarea a agregar */
+            /**@type {object} - Objeto con los datos de la nueva tarea a agregar. */
             tarea: {
                 id: '',
                 nombre: '',
                 categorias: [],
                 estado: '',
                 numero: 0
-            }
+            },
+            /**@type {boolean} - Boolean in charge of hearing if a task is currently beign edited. */
+            isEdit: false,
         }
     },
 
     methods: {
         /**Mapea las acciones que pueden ser llamadas desde la tienda mediante el vuex */
-        ...mapActions(['setTarea']),
+        ...mapActions(['setTarea', 'editTarea']),
 
         /**Metodo encargado de procesar el formulario previamente llenado */
-        async procesarFormulario(){
+        async procesarFormulario(newTask){
             /**Validations */
-            if(this.tarea.nombre.trim() === ""){
+            if(newTask.nombre.trim() === ""){
                 alert('Campo vacío');
                 return
             }
-            
             /**Generating shortid */
-            this.tarea.id = shortid.generate();
-            
+            newTask.id =  this.isEdit ? newTask.id : shortid.generate();
             /**Saving with vuex store */
-            await this.setTarea(this.tarea);
+            this.isEdit ? await this.editTarea(newTask) : await this.setTarea(newTask);
 
+            /**Cleaning data */
+            this.cleanData();
+        },
+
+        /**Sets the task to edit */
+        setEditTask(task){
+            this.tarea = task;
+            this.isEdit = true;
+        },
+
+        /**Function in charge of cleaning data from inputs */
+        cleanData(){
             /**Cleaning data */
             this.tarea = {
                 id: '',
@@ -61,6 +73,7 @@ export default {
                 estado: '',
                 numero: 0
             }
+            this.isEdit = false;
         }
     },
 }
