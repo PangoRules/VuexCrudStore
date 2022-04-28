@@ -1,5 +1,6 @@
-<<<<<<< HEAD
-# formulario-1
+# README
+
+The following project is a simple CRUD made with Vue along with Vuex and Local Storage.
 
 ## Project setup
 ```
@@ -19,6 +20,3 @@ npm run build
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 =======
-# vue-vuexStoreCRUD
-Simple app to create a CRUD using local storage and Vuex store
->>>>>>> 4674f954537e5d7dec521057549f3a2cec3c5a57
